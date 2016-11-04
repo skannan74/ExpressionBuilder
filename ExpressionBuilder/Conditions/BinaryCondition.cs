@@ -1,0 +1,114 @@
+// ===========================================================
+// Copyright (c) 2014-2015, Enrico Da Ros/kendar.org
+// All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+// 
+// * Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+// 
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// ===========================================================
+
+
+using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using ExpressionBuilder.Enums;
+using ExpressionBuilder.Fluent;
+using ExpressionBuilder.Parser;
+
+namespace ExpressionBuilder.Conditions
+{
+	public class BinaryCondition : Condition
+	{
+		internal IOperation LValue;
+		internal IOperation RValue;
+		internal ComparaisonOperator Comparaison;
+
+		public BinaryCondition(IOperation lValue, IOperation rValue, ComparaisonOperator comparaison)
+		{
+			LValue = lValue;
+			RValue = rValue;
+			Comparaison = comparaison;
+		}
+
+		public override string ToString(ParseContext context)
+		{
+			var rstring = RValue.ToString(context);
+			var lstring = LValue.ToString(context);
+			return lstring + " " + AssignementToString() + " " + rstring;
+		}
+
+		protected Type _rType;
+		protected Type _lType;
+		public override void PreParseExpression(ParseContext context)
+		{
+			RValue.PreParseExpression(context);
+			_rType = RValue.ParsedType;
+			LValue.PreParseExpression(context);
+			_lType = LValue.ParsedType;
+			ParsedType = typeof(bool);
+		}
+
+		public override Type ParsedType { get; protected set; }
+
+		private string AssignementToString()
+		{
+			switch (Comparaison)
+			{
+				case (ComparaisonOperator.Different):
+					return "!=";
+				case (ComparaisonOperator.Equal):
+					return "==";
+				case (ComparaisonOperator.Greater):
+					return ">";
+				case (ComparaisonOperator.GreaterEqual):
+					return ">=";
+				case (ComparaisonOperator.Smaller):
+					return "<";
+				case (ComparaisonOperator.SmallerEqual):
+					return "<=";
+				case (ComparaisonOperator.ReferenceEqual):
+					return "==";
+			}
+			throw new InvalidEnumArgumentException();
+		}
+
+		public override Expression ToExpression(ParseContext context)
+		{
+			switch (Comparaison)
+			{
+				case (ComparaisonOperator.Different):
+					return Expression.NotEqual(LValue.ToExpression(context), RValue.ToExpression(context));
+				case (ComparaisonOperator.Equal):
+					return Expression.Equal(LValue.ToExpression(context), RValue.ToExpression(context));
+				case (ComparaisonOperator.Greater):
+					return Expression.GreaterThan(LValue.ToExpression(context), RValue.ToExpression(context));
+				case (ComparaisonOperator.GreaterEqual):
+					return Expression.GreaterThanOrEqual(LValue.ToExpression(context), RValue.ToExpression(context));
+				case (ComparaisonOperator.Smaller):
+					return Expression.LessThan(LValue.ToExpression(context), RValue.ToExpression(context));
+				case (ComparaisonOperator.SmallerEqual):
+					return Expression.LessThanOrEqual(LValue.ToExpression(context), RValue.ToExpression(context));
+				case (ComparaisonOperator.ReferenceEqual):
+					return Expression.ReferenceEqual(LValue.ToExpression(context), RValue.ToExpression(context));
+			}
+			throw new InvalidEnumArgumentException();
+		}
+	}
+}
