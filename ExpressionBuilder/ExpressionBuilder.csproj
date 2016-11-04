@@ -53,7 +53,9 @@
     <Compile Include="Conditions\BinaryCondition.cs" />
     <Compile Include="Conditions\MultiCondition.cs" />
     <Compile Include="CodeLines\CreateReturn.cs" />
+    <Compile Include="Fluent\IForEach.cs" />
     <Compile Include="Fluent\IWhile.cs" />
+    <Compile Include="ForEach.cs" />
     <Compile Include="Operations\OperationNewArrayInit.cs" />
     <Compile Include="Operations\OperationProperty.cs" />
     <Compile Include="StringOperation.cs" />

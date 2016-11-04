@@ -50,26 +50,37 @@ namespace ExpressionBuilder.Operations
             return context.GetVariable(Name).Expression;
         }
 
-        private Expression ToExpression(Expression aobjSourceExpression, string astrPropertyName)
+        //private Expression ToExpression(Expression aobjSourceExpression, string astrPropertyName)
+        //{
+
+        //    string[] parts = astrPropertyName.Split('.');
+
+        //    int partsL = parts.Length;
+
+        //    return (partsL > 1)
+        //        ?
+        //        Expression.PropertyOrField(
+        //            ToExpression(
+        //                aobjSourceExpression,
+        //                parts.Take(partsL - 1)
+        //                    .Aggregate((a, i) => a + "." + i)
+        //            ),
+        //            parts[partsL - 1])
+        //        :
+        //        Expression.PropertyOrField(aobjSourceExpression, astrPropertyName);
+
+        //}
+
+        private Expression ToExpression(Expression obj, string propertyName)
         {
+            string[] parts = propertyName.Split(new char[] { '.' }, 2);
+            Expression member = Expression.PropertyOrField(obj, parts[0]);
 
-            string[] parts = astrPropertyName.Split('.');
+            if (parts.Length > 1)
+                member = ToExpression(member, parts[1]);
 
-            int partsL = parts.Length;
-
-            return (partsL > 1)
-                ?
-                Expression.PropertyOrField(
-                    ToExpression(
-                        aobjSourceExpression,
-                        parts.Take(partsL - 1)
-                            .Aggregate((a, i) => a + "." + i)
-                    ),
-                    parts[partsL - 1])
-                :
-                Expression.PropertyOrField(aobjSourceExpression, astrPropertyName);
-
-
+            return Expression.Condition(Expression.Equal(obj, Expression.Constant(null)),
+                Expression.Constant(null, member.Type), member);
         }
     }
 }

@@ -110,7 +110,8 @@ namespace ExpressionBuilder.Parser
 
 		internal Variable GetVariable(string name)
 		{
-			int i = Count - 1;
+            name = name.Split('.')[0]; // Kans hack. For Nested property, we just return only the source variable. We loop thru the children in recursion 
+            int i = Count - 1;
 			while (i >= 0)
 			{
 				if (_parseLevels[i].HasVariable(name))
