@@ -101,7 +101,12 @@ namespace ExpressionBuilder
 			return Get(Variable(variable), propertyName);
 		}
 
-		public static ICodeLine Set(IOperation variable, string propertyName, IOperation value)
+        public static IRightable Get(string propertyName)
+        {
+            return new OperationProperty(propertyName);
+        }
+
+        public static ICodeLine Set(IOperation variable, string propertyName, IOperation value)
 		{
 			return Invoke(variable, "set_" + propertyName, value);
 		}

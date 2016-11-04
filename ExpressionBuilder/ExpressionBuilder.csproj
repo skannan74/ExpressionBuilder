@@ -55,6 +55,7 @@
     <Compile Include="CodeLines\CreateReturn.cs" />
     <Compile Include="Fluent\IWhile.cs" />
     <Compile Include="Operations\OperationNewArrayInit.cs" />
+    <Compile Include="Operations\OperationProperty.cs" />
     <Compile Include="StringOperation.cs" />
     <Compile Include="Utils\ExpressionUtil.cs" />
     <Compile Include="Utils\LambdaPropertyDescriptor.cs" />
@@ -96,11 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="TODO.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ExpressionBuilder.nuspec">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
