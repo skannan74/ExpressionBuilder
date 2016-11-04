@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ExpressionBuilder.Test")]
+[assembly: AssemblyTitle("ExpressionBuilder.ConsoleTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Kendar.org")]
-[assembly: AssemblyProduct("ExpressionBuilder.Test")]
-[assembly: AssemblyCopyright("Copyright © Kendar.org 2013")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("ExpressionBuilder.ConsoleTest")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ada987ff-2fed-4d7c-84b9-84df98812321")]
+[assembly: Guid("c2a1dce2-8dca-415f-846f-4c76a2f37354")]
 
 // Version information for an assembly consists of the following four values:
 //

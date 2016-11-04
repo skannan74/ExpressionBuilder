@@ -3,3 +3,6 @@
 ################################################################################
 
 /ExpressionBuilder/obj/Debug
+/ExpressionBuilder/bin/Debug
+/ExpressionBuilder.ConsoleTest/obj/Debug
+/ExpressionBuilder.ConsoleTest/bin/Debug
