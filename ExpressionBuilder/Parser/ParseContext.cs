@@ -27,7 +27,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace ExpressionBuilder.Parser
 {
@@ -110,20 +112,61 @@ namespace ExpressionBuilder.Parser
 
 		internal Variable GetVariable(string name)
 		{
-            name = name.Split('.')[0]; // Kans hack. For Nested property, we just return only the source variable. We loop thru the children in recursion 
+            string[] names = name.Split('.'); // Kans hack. For Nested property, we just return only the source variable. We loop thru the children in recursion 
             int i = Count - 1;
 			while (i >= 0)
 			{
-				if (_parseLevels[i].HasVariable(name))
+				if (_parseLevels[i].HasVariable(names[0]))
 				{
-					return _parseLevels[i].GetVariable(name);
+					var variable = _parseLevels[i].GetVariable(names[0]);
+				    if (names.Length > 1) //name contains ".". We have to look for nested variables
+				    {
+				        return GetNestedProperty(variable,string.Join(".",names.Skip(1)));
+				    }
+				    else
+				    {
+				        return variable;
+				    }
 				}
 				i--;
 			}
 			throw new Exception("Variable not found "+name);
 		}
 
-		public void RemoveLevel()
+	    private Variable GetNestedProperty(Variable variable, string propertyName)
+	    {
+            string[] parts = propertyName.Split(new char[] { '.' }, 2);
+	        MemberInfo lobjMemberInfo = variable.DataType.GetMember(parts[0]).FirstOrDefault();
+            //check for null
+	        Variable lobjVariable = null;
+
+            if (lobjMemberInfo != null)
+	        {
+	            if (lobjMemberInfo is PropertyInfo)
+	            {
+                    lobjVariable = new Variable((lobjMemberInfo as PropertyInfo).PropertyType, parts[0]);
+                }
+                else if (lobjMemberInfo is FieldInfo)
+                {
+                    lobjVariable = new Variable((lobjMemberInfo as FieldInfo).FieldType, parts[0]);
+                }
+	            else
+	            {
+	                throw  new Exception("Unknown variable type "+lobjMemberInfo.Name);
+	            }
+            }
+            else
+            {
+	            throw new Exception("Variable not found (nested property)" + parts[0]);
+	        }
+
+	        if (parts.Length > 1)
+                lobjVariable = GetNestedProperty(lobjVariable, parts[1]);
+
+	        return lobjVariable;
+	    }
+
+	    public void RemoveLevel()
 		{
 			_parseLevels.RemoveAt(Level);
 		}

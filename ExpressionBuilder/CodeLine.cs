@@ -99,5 +99,10 @@ namespace ExpressionBuilder
 			}
 		
 		}
-	}
+
+        public static IForEach CreateForEach(string collectionName)
+        {
+            return new ForEach(Operation.Variable(collectionName));
+        }
+    }
 }

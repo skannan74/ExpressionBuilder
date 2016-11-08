@@ -57,10 +57,12 @@ namespace ExpressionBuilder.Test
 }";
 
 			var newExpression = Function.Create()
+                    .WithParameter(typeof(string),"first")
 					.WithParameter<string>("first")
 					.WithParameter<string>("second")
 					.WithBody(
-							CodeLine.Assign("first", "second")
+							CodeLine.Assign("first", "second"),
+                            CodeLine.Assign("FirstName",Operation.Get("person.icdoperson.firstname"))
 					)
 					.Returns("first");
 

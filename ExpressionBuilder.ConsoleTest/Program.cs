@@ -44,8 +44,14 @@ namespace ExpressionBuilder.ConsoleTest
 
             var result1 = Sample.PropertySetterWithLoop() as IExpressionResult;
             var expr = result1.ToExpression();
-            var result2 = expr.Compile().DynamicInvoke(person);
-            var result3 = result1.ToLambda<Func<busMSSPerson, mDictionary>>()(person);
+            var result2compiled = expr.Compile();//this goes to cache
+            var result2 = result2compiled.DynamicInvoke(person);
+           // var result3 = result1.ToLambda<Func<busMSSPerson, mDictionary>>()(person);
+
+            var looptestresult = Sample.ForEachSample() as IExpressionResult;
+            var loopexpstr = looptestresult.ToString();
+            var loopexpr = looptestresult.ToExpression();
+            var loopresult2 = loopexpr.Compile().DynamicInvoke(person);
 
         }
     }

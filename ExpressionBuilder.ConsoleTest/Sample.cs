@@ -195,10 +195,7 @@ namespace ExpressionBuilder.ConsoleTest
             var local = Expression.Parameter(expectedType, "obj");
 
 
-
-
             var KeyExpressionGetter = Expression.Call(local, expectedType.GetMethod("SetVal"), Expression.Constant("KeyName1"), Expression.Constant("ValName1"));
-
 
 
             var block = Expression.Block(
@@ -208,6 +205,34 @@ namespace ExpressionBuilder.ConsoleTest
                 local
                 );
             return Expression.Lambda<Func<mDictionary>>(block);
+        }
+
+        public static dynamic ForEachSample()
+        {
+
+          //  List<string> lst = new List<string>() {"a", "b", "c"};
+            var lobjDictionaryType = typeof(mDictionary);
+            var newExpression = Function.Create()
+                    .WithParameter<busMSSPerson>("source")
+                    .WithBody(
+                        CodeLine.CreateVariable(lobjDictionaryType, "lobjDictionaryInstance"),
+                        CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType))//,
+                        //Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Phone"), Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number")),
+                        //Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("source.FirstName"))
+
+                        ,CodeLine.CreateVariable(typeof(ICollection<busPersonAddress>), "coll")
+                        ,CodeLine.Assign("coll",Operation.Get("source.ilstAddresses"))
+                        ,CodeLine.CreateForEach("coll")
+                        .Each(Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("loopvar.Address1"))
+                        )
+
+                        // CodeLine.CreateWhile()
+
+
+                        )
+                    .Returns("lobjDictionaryInstance");
+
+            return newExpression;
         }
 
 

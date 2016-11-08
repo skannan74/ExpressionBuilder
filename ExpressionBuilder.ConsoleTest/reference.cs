@@ -127,7 +127,17 @@ namespace ExpressionBuilder.ConsoleTest
             );
 
             return loop;
+            /*
+            var collection = Expression.Parameter(typeof(List<string>), "collection");
+            var loopVar = Expression.Parameter(typeof(string), "loopVar");
+            var loopBody = Expression.Call(typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), loopVar);
+            var loop = ForEach(collection, loopVar, loopBody);
+            var compiled = Expression.Lambda<Action<List<string>>>(loop, collection).Compile();
+            compiled(new List<string>() { "a", "b", "c" });
+            */
         }
+
+
 
         public static Expression For(ParameterExpression loopVar, Expression initValue, Expression condition, Expression increment, Expression loopContent)
         {

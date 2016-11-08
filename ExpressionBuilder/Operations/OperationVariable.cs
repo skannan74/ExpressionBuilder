@@ -49,7 +49,7 @@ namespace ExpressionBuilder.Operations
 
 		public void PreParseExpression(ParseContext context)
 		{
-			var resultVar = context.GetVariable(Name);
+			 var resultVar = context.GetVariable(Name);
 			ParsedType = resultVar.DataType;
 		}
 
