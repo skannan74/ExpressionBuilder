@@ -1,0 +1,8 @@
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\obj\Debug\ExpressionBuilder.Test.csprojResolveAssemblyReference.cache
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\bin\Debug\ExpressionBuilder.Test.dll
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\bin\Debug\ExpressionBuilder.Test.pdb
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\bin\Debug\ExpressionBuilder.dll
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\bin\Debug\ExpressionBuilder.pdb
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\obj\Debug\ExpressionBuilder.Test.dll
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.Test\obj\Debug\ExpressionBuilder.Test.pdb
