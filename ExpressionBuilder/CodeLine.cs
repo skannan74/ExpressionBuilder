@@ -100,9 +100,9 @@ namespace ExpressionBuilder
 		
 		}
 
-        public static IForEach CreateForEach(string collectionName)
+        public static IForEach CreateForEach(string collectionName,string loopVariable)
         {
-            return new ForEach(Operation.Variable(collectionName));
+            return new ForEach(Operation.Get(collectionName),loopVariable);
         }
     }
 }

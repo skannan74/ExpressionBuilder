@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ExpressionBuilder.Enums;
 using ExpressionBuilder.Operations;
 
 namespace ExpressionBuilder.ConsoleTest
@@ -12,7 +13,7 @@ namespace ExpressionBuilder.ConsoleTest
     public class Sample
     {
 
-   
+
 
         /// <summary>
         /// This method takes dictionary object and fills the keyvalue using indexer
@@ -157,10 +158,10 @@ namespace ExpressionBuilder.ConsoleTest
             var newExpression = Function.Create()
                     .WithParameter<busMSSPerson>("source")
                     .WithBody(
-                        CodeLine.CreateVariable(lobjDictionaryType,"lobjDictionaryInstance"),
+                        CodeLine.CreateVariable(lobjDictionaryType, "lobjDictionaryInstance"),
                         CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType)),
-                        Operation.Invoke(Operation.Variable("lobjDictionaryInstance"),"SetVal",new OperationConst("FName"),Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number"))
-                        
+                        Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number"))
+
                         )
                     .Returns("lobjDictionaryInstance");
 
@@ -168,18 +169,20 @@ namespace ExpressionBuilder.ConsoleTest
 
         }
 
-        public static dynamic PropertySetterWithLoop()
+        public static dynamic PropertySette1()
         {
             var lobjDictionaryType = typeof(mDictionary);
-            var newExpression = Function.Create()
+            var newExpression = Function.Create("testfunction")
+
                     .WithParameter<busMSSPerson>("source")
                     .WithBody(
                         CodeLine.CreateVariable(lobjDictionaryType, "lobjDictionaryInstance"),
                         CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType)),
+
                         Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Phone"), Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number")),
                         Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("source.FirstName"))//,
-                       // CodeLine.CreateWhile()
-                        
+                                                                                                                                                                // CodeLine.CreateWhile()
+
 
                         )
                     .Returns("lobjDictionaryInstance");
@@ -210,28 +213,62 @@ namespace ExpressionBuilder.ConsoleTest
         public static dynamic ForEachSample()
         {
 
-          //  List<string> lst = new List<string>() {"a", "b", "c"};
+            //  List<string> lst = new List<string>() {"a", "b", "c"};
             var lobjDictionaryType = typeof(mDictionary);
             var newExpression = Function.Create()
                     .WithParameter<busMSSPerson>("source")
                     .WithBody(
                         CodeLine.CreateVariable(lobjDictionaryType, "lobjDictionaryInstance"),
-                        CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType))//,
-                        //Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Phone"), Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number")),
-                        //Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("source.FirstName"))
+                          CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType))
+                          ,Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Phone"), Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number"))
+                          ,Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("source.FirstName"))
 
-                        ,CodeLine.CreateVariable(typeof(ICollection<busPersonAddress>), "coll")
-                        ,CodeLine.Assign("coll",Operation.Get("source.ilstAddresses"))
-                        ,CodeLine.CreateForEach("coll")
-                        .Each(Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("loopvar.Address1"))
-                        )
+                         ,CodeLine.CreateVariable(typeof(List<object>), "lst")
+                        , CodeLine.Assign("lst", Operation.CreateInstance(typeof(List<object>)))//,
+                                                                                                //  , CodeLine.CreateVariable(typeof(ICollection<busPersonAddress>), "coll")
+                                                                                                //  , CodeLine.Assign("coll", Operation.Get("source.ilstAddresses"))
+                        ,CodeLine.CreateVariable(lobjDictionaryType, "localvar")
+                        , CodeLine.CreateForEach("source.ilstAddresses", "item")
+                            .Each(
+                             
+                             CodeLine.Assign("localvar", Operation.CreateInstance(lobjDictionaryType))
+                            , Operation.Invoke(Operation.Variable("localvar"), "SetVal", new OperationConst("Addr1"), Operation.Get("item.Address1"))
+                            , Operation.Invoke(Operation.Variable("localvar"), "SetVal", new OperationConst("Addr2"), Operation.Get("item.Address2"))
+                            , Operation.Invoke(Operation.Variable("localvar"), "SetVal", new OperationConst("Name"), Operation.Get("item.Person.FirstName"))
+                            , Operation.Invoke(Operation.Variable("lst"), "Add", Operation.Variable("localvar"))
+                            )
+                            //, CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType))
+                            , Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("gender"), Operation.Variable("lst"))
+                            )
 
-                        // CodeLine.CreateWhile()
-
-
-                        )
                     .Returns("lobjDictionaryInstance");
 
+            return newExpression;
+        }
+
+        //        var enumerator = getInt().GetEnumerator();
+        //while(enumerator.MoveNext())
+        //{
+        //    int n = enumerator.Current;
+        //        Console.WriteLine(n);
+        //}
+        public static dynamic WhileSample()
+        {
+            var lobjDictionaryType = typeof(mDictionary);
+            var newExpression = Function.Create()
+                .WithParameter<busMSSPerson>("source")
+                .WithBody(
+                    CodeLine.CreateVariable(lobjDictionaryType, "lobjDictionaryInstance"),
+                    CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType)),
+                    CodeLine.CreateVariable<string>("result"),
+                    CodeLine.CreateVariable<IEnumerator<busPersonAddress>>("getenumeratormethod"),
+                    CodeLine.Assign("getenumeratormethod",
+                    Operation.InvokeReturn("source.ilstAddresses", "GetEnumerator")),
+                    CodeLine.CreateWhile(Condition.Compare(Operation.InvokeReturn("getenumeratormethod", "MoveNext"), Operation.Constant(true), ComparaisonOperator.Equal))
+                .Do(
+                    Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("getenumeratormethod.Current.Address1"))
+                ))
+                .Returns("lobjDictionaryInstance");
             return newExpression;
         }
 

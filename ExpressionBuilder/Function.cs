@@ -66,7 +66,22 @@ namespace ExpressionBuilder
 			return this;
 		}
 
-		public IFunctionReturn WithBody(ICodeLine firstCodeLine, params ICodeLine[] codeLines)
+        /// <summary>
+        /// Added by Kannan.S, Sagitec. This method takes variable as parameter and addes all the variables at one shot
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public IBodyOrParameter WithParameters(params Variable[] variables)
+        {
+            foreach (var variable in variables)
+            {
+                InputParameters.Add(variable.Name, variable);
+            }
+            return this;
+        }
+
+        public IFunctionReturn WithBody(ICodeLine firstCodeLine, params ICodeLine[] codeLines)
 		{
 			if (firstCodeLine is If)
 			{

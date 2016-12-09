@@ -33,5 +33,12 @@ namespace ExpressionBuilder.Fluent
 	{
 		IBodyOrParameter WithParameter(Type type, string name);
 		IBodyOrParameter WithParameter<TData>(string name);
-	}
+
+        /// <summary>
+        /// by Kannan.s Sagitec
+        /// </summary>
+        /// <param name="variables"></param>
+        /// <returns></returns>
+        IBodyOrParameter WithParameters(params Variable[] variables);
+    }
 }
