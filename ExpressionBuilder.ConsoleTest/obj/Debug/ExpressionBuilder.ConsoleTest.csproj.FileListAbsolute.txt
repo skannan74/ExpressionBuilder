@@ -1,10 +1,10 @@
-D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\obj\Debug\ExpressionBuilder.ConsoleTest.csprojResolveAssemblyReference.cache
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\ExpressionBuilder.ConsoleTest.exe.config
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\ExpressionBuilder.ConsoleTest.exe
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\ExpressionBuilder.ConsoleTest.pdb
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\ExpressionBuilder.dll
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\Newtonsoft.Json.dll
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\ExpressionBuilder.pdb
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\Newtonsoft.Json.xml
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\obj\Debug\ExpressionBuilder.ConsoleTest.csprojResolveAssemblyReference.cache
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\obj\Debug\ExpressionBuilder.ConsoleTest.exe
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\obj\Debug\ExpressionBuilder.ConsoleTest.pdb
-D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\Newtonsoft.Json.dll
-D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder.ConsoleTest\bin\Debug\Newtonsoft.Json.xml

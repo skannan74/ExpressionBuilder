@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExpressionBuilder.Fluent
 {
-    public interface IForEach
+    public interface IForEach : ICodeLine
     {
         ICodeLine Each(ICodeLine firstCodeLine, params ICodeLine[] codeLines);
     }

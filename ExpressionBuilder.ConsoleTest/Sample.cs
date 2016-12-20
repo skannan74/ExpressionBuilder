@@ -220,23 +220,23 @@ namespace ExpressionBuilder.ConsoleTest
                     .WithBody(
                         CodeLine.CreateVariable(lobjDictionaryType, "lobjDictionaryInstance"),
                           CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType))
-                          ,Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Phone"), Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number"))
-                          ,Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("source.FirstName"))
+                          , Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Phone"), Operation.Get("source.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number"))
+                          , Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("FName"), Operation.Get("source.FirstName"))
 
-                         ,CodeLine.CreateVariable(typeof(List<object>), "lst")
+                         , CodeLine.CreateVariable(typeof(List<object>), "lst")
                         , CodeLine.Assign("lst", Operation.CreateInstance(typeof(List<object>)))//,
                                                                                                 //  , CodeLine.CreateVariable(typeof(ICollection<busPersonAddress>), "coll")
                                                                                                 //  , CodeLine.Assign("coll", Operation.Get("source.ilstAddresses"))
-                        ,CodeLine.CreateVariable(lobjDictionaryType, "localvar")
-                        , CodeLine.CreateForEach("source.ilstAddresses", "item")
+                                                                                                //  ,CodeLine.CreateVariable(lobjDictionaryType, "localvar")
+                        , CodeLine.CreateForEach("source.iclbAddress", "item")
                             .Each(
-                             
-                             CodeLine.Assign("localvar", Operation.CreateInstance(lobjDictionaryType))
-                            , Operation.Invoke(Operation.Variable("localvar"), "SetVal", new OperationConst("Addr1"), Operation.Get("item.Address1"))
-                            , Operation.Invoke(Operation.Variable("localvar"), "SetVal", new OperationConst("Addr2"), Operation.Get("item.Address2"))
-                            , Operation.Invoke(Operation.Variable("localvar"), "SetVal", new OperationConst("Name"), Operation.Get("item.Person.FirstName"))
-                            , Operation.Invoke(Operation.Variable("lst"), "Add", Operation.Variable("localvar"))
-                            )
+
+                             CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType))
+                            , Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Addr1"), Operation.Get("item.Address1"))
+                            , Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Addr2"), Operation.Get("item.Address2"))
+                            , Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("Name"), Operation.Get("item.Person.FirstName"))
+                            , Operation.Invoke(Operation.Variable("lst"), "Add", Operation.Variable("lobjDictionaryInstance"))
+                            ) //end of each block
                             //, CodeLine.Assign("lobjDictionaryInstance", Operation.CreateInstance(lobjDictionaryType))
                             , Operation.Invoke(Operation.Variable("lobjDictionaryInstance"), "SetVal", new OperationConst("gender"), Operation.Variable("lst"))
                             )

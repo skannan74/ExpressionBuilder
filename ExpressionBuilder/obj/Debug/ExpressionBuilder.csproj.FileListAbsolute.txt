@@ -1,4 +1,5 @@
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder\bin\Debug\ExpressionBuilder.dll
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder\bin\Debug\ExpressionBuilder.pdb
+D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder\obj\Debug\ExpressionBuilder.csprojResolveAssemblyReference.cache
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder\obj\Debug\ExpressionBuilder.dll
 D:\Kannan\MySamples\Projects\MobiasExpressionBuilder\ExpressionBuilder\obj\Debug\ExpressionBuilder.pdb

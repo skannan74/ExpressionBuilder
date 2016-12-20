@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExpressionBuilder.Fluent;
 
 namespace ExpressionBuilder.ConsoleTest
 {
@@ -30,11 +31,12 @@ namespace ExpressionBuilder.ConsoleTest
         public busPersonPrimaryPhone ibusPersonPrimaryPhone { get; set; }
         public busPersonPrimaryPhone ibusPersonAlternatePhone { get; set; }
 
-        public Collection<busPersonAddress> ilstAddresses { get; set; }
+        public Collection<busPersonAddress> iclbAddress { get; set; }
         public int PersonID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName { get; set; }
+        public DateTime DOB { get; set; }
 
     }
 
@@ -57,9 +59,17 @@ namespace ExpressionBuilder.ConsoleTest
         public string Address1 { get; set; }
         public string Address2 { get; set; }
 
+        public busMSSPerson ContactPerson { get; set; }
+
         public busMSSPerson Person { get; set; }
     }
 
-   
+    public class DynamicFunctionObject
+    {
+        //public List<Variable> InputParams { get; set; }
+        public List<Variable> InputParams { get; set; }
+        public List<ICodeLine> FunctionBody { get; set; }
+        public string FunctionReturn { get; set; }
+    }
 
 }

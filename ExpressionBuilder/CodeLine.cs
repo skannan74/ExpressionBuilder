@@ -26,6 +26,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using ExpressionBuilder.CodeLines;
 using ExpressionBuilder.Enums;
 using ExpressionBuilder.Fluent;
@@ -91,18 +92,25 @@ namespace ExpressionBuilder
 			return new CreateReturn();
 		}
 
-		public static ICodeLine Nop
-		{
-			get
-			{
-				return new Nop();		
-			}
-		
-		}
+		public static ICodeLine Nop => new Nop();
 
-        public static IForEach CreateForEach(string collectionName,string loopVariable)
+	    public static IForEach CreateForEach(string collectionName,string loopVariable)
         {
             return new ForEach(Operation.Get(collectionName),loopVariable);
+        }
+
+        public static IEnumerable<ICodeLine> CreateVariableAndInitialize(Type dataType, string variableName)
+        {
+            List<ICodeLine> lobjCodeLines = new List<ICodeLine>();
+            lobjCodeLines.Add(CreateVariable(dataType, variableName));
+            lobjCodeLines.Add(CodeLine.Assign(variableName, Operation.CreateInstance(dataType)));
+            return lobjCodeLines;
+        }
+
+
+        public static IEnumerable<ICodeLine> CreateVariableAndInitialize<TData>(string variableName)
+        {
+            return CreateVariableAndInitialize(typeof(TData), variableName);
         }
     }
 }

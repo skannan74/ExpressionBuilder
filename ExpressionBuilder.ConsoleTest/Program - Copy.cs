@@ -1,6 +1,5 @@
 ﻿using ExpressionBuilder.Fluent;
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Dynamic;
@@ -44,11 +43,11 @@ namespace ExpressionBuilder.ConsoleTest
                 },
                 iclbAddress = new Collection<busPersonAddress>()
                 {
-                    new busPersonAddress() {Address1 = "Address1Item1", Address2 = "Address2Item1" , ContactPerson = new busMSSPerson() {FirstName = "sample name1", LastName = "Last Name1"} },
-                    new busPersonAddress() {Address1 = "Address1Item2", Address2 = "Address2Item2" , ContactPerson = new busMSSPerson() {FirstName = "sample name2", LastName = "Last Name2"} },
-                    new busPersonAddress() {Address1 = "Address1Item3", Address2 = "Address2Item3" , ContactPerson = new busMSSPerson() {FirstName = "sample name3", LastName = "Last Name3"} },
-                    new busPersonAddress() {Address1 = "Address1Item4", Address2 = "Address2Item4" , ContactPerson = new busMSSPerson() {FirstName = "sample name4", LastName = "Last Name4"} },
-                    new busPersonAddress() {Address1 = "Address1Item5", Address2 = "Address2Item5" , ContactPerson = new busMSSPerson() {FirstName = "sample name5", LastName = "Last Name5"} },
+                    new busPersonAddress() {Address1 = "Address1Item1", Address2 = "Address2Item1" , Person = new busMSSPerson() {FirstName = "sample name"} },
+                    new busPersonAddress() {Address1 = "Address1Item2", Address2 = "Address2Item2" , Person = new busMSSPerson() {FirstName = "sample name"} },
+                    new busPersonAddress() {Address1 = "Address1Item3", Address2 = "Address2Item3" , Person = new busMSSPerson() {FirstName = "sample name"} },
+                    new busPersonAddress() {Address1 = "Address1Item4", Address2 = "Address2Item4" , Person = new busMSSPerson() {FirstName = "sample name"} },
+                    new busPersonAddress() {Address1 = "Address1Item5", Address2 = "Address2Item5" , Person = new busMSSPerson() {FirstName = "sample name"} },
                 }
 
 
@@ -65,15 +64,13 @@ namespace ExpressionBuilder.ConsoleTest
             //var str2 = Newtonsoft.Json.JsonConvert.SerializeObject(result3);
 
 
-            //var looptestresult = Sample.ForEachSample() as IExpressionResult;
-            //var loopexpstr = looptestresult.ToString();
-            //var loopexpr = looptestresult.ToExpression();
-            //var loopresult2 = loopexpr.Compile().DynamicInvoke(person);
-            //var str5 = Newtonsoft.Json.JsonConvert.SerializeObject(loopresult2, Formatting.Indented, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+            var looptestresult = Sample.ForEachSample() as IExpressionResult;
+            var loopexpstr = looptestresult.ToString();
+            var loopexpr = looptestresult.ToExpression();
+            var loopresult2 = loopexpr.Compile().DynamicInvoke(person);
+            var str5 = Newtonsoft.Json.JsonConvert.SerializeObject(loopresult2, Formatting.Indented, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
-            new FilterProcessor().ParseFilterFiles(person);
-            return;
-           // ParseXMLAndCreateFunction(person, "newGetContactInfo.xml");
+            ParseXMLAndCreateFunction(person, "newGetContactInfo.xml");
         }
 
         protected static void ParseXMLAndCreateFunction(object mainobj, string xmlfile)
@@ -110,21 +107,13 @@ namespace ExpressionBuilder.ConsoleTest
                         //    break;
                         case "single":
                             {
-                                var codelines = ProcessSingleElement(lobjChildNode, dfo);
-                                codelines.Add(AddToDictionary("data",lobjChildNode.Attribute("name").Value, "localDictionary"));
-                                dfo.FunctionBody.AddRange(codelines);
+                                dfo.FunctionBody.AddRange(ProcessSingleElement(lobjChildNode, "data"));
                             }
 
                             break;
                         case "list":
                             {
-                                var codelines = ProcessListElement(lobjChildNode);
-                                codelines.Add(AddToDictionary("data", lobjChildNode.Attribute("name").Value, "lst"));
-                                //string lstrSingleObjectKey = lobjChildNode.Attribute("name").Value;
-                                //ICodeLine lobjCodeLine = Operation.Invoke(Operation.Variable("data"),
-                                //    "SetVal", new OperationConst(lstrSingleObjectKey), Operation.Variable("lst"));
-                                //codelines.Add(lobjCodeLine);
-                                dfo.FunctionBody.AddRange(codelines);
+                                dfo.FunctionBody.AddRange(ProcessListElement(lobjChildNode));
                             }
                             break;
                         default:
@@ -150,12 +139,6 @@ namespace ExpressionBuilder.ConsoleTest
 
         }
 
-        private static ICodeLine AddToDictionary(string astrPayloadDictionaryKey, string astrKey, string astrValuePlaceHolder)
-        {
-            return  Operation.Invoke(Operation.Variable(astrPayloadDictionaryKey),
-                "SetVal", new OperationConst(astrKey), Operation.Variable(astrValuePlaceHolder));
-        }
-
         private static List<ICodeLine> ProcessListElement(XElement aobjListChildNode)
         {
             List<ICodeLine> llstCodeLines = new List<ICodeLine>();
@@ -163,35 +146,24 @@ namespace ExpressionBuilder.ConsoleTest
             string lstrListPath = aobjListChildNode.Attribute("path").Value;
             string lstrLoopItemName = aobjListChildNode.Attribute("loopVariable").Value;
             List<ICodeLine> lobjEachBlockCodeLines = new List<ICodeLine>();
-            llstCodeLines.Add(CodeLine.CreateVariable(typeof(List<object>), "lst"));
-            llstCodeLines.Add(CodeLine.Assign("lst", Operation.CreateInstance(typeof(List<object>))));
-
-            lobjEachBlockCodeLines.AddRange(ProcessSingleElement(aobjListChildNode,null));
-            lobjEachBlockCodeLines.Add(Operation.Invoke(Operation.Variable("lst"), "Add", Operation.Variable("localDictionary")));
+            lobjEachBlockCodeLines.AddRange(ProcessSingleElement(aobjListChildNode, "data", true));
             llstCodeLines.Add(CodeLine.CreateForEach(lstrListPath, lstrLoopItemName).Each(CodeLine.Nop, lobjEachBlockCodeLines.ToArray()));
             return llstCodeLines;
 
         }
 
-        private static List<ICodeLine> ProcessSingleElement(XElement aobjSingleChildNode, DynamicFunctionObject aobjDFO, List<ICodeLine> alstCodeLines = null)
+        private static List<ICodeLine> ProcessSingleElement(XElement aobjSingleChildNode, string aobjParentContainerKey, bool ablnPackInList = false)
         {
-           // List<ICodeLine> llstCodeLines = alstCodeLines ?? new List<ICodeLine>();
-            //string lstrSingleObjectKey = aobjSingleChildNode.Attribute("name").Value;
+            List<ICodeLine> llstCodeLines = new List<ICodeLine>();
+            string lstrSingleObjectKey = aobjSingleChildNode.Attribute("name").Value;
             //dfo.FunctionBody.Add(CodeLine.Assign(lstrSingleObjectKey, Operation.CreateInstance(typeof(mDictionary))));
+            llstCodeLines.Add(CodeLine.Assign("localvar", Operation.CreateInstance(typeof(mDictionary)))); //temporary variable to hold the keyvalue paid within the loop. 
 
-          //  if(aobjDFO.FunctionBody.Where(d))
-            if (alstCodeLines == null)
+            if (ablnPackInList)
             {
-                alstCodeLines = new List<ICodeLine>();
-                alstCodeLines.Add(CodeLine.Assign("localDictionary", Operation.CreateInstance(typeof(mDictionary))));
-                    //temporary variable to hold the keyvalue paid within the loop. 
+                llstCodeLines.Add(CodeLine.CreateVariable(typeof(List<object>), "lst"));
+                llstCodeLines.Add(CodeLine.Assign("lst", Operation.CreateInstance(typeof(List<object>))));
             }
-
-            //if (ablnPackInList)
-            //{
-            //    llstCodeLines.Add(CodeLine.CreateVariable(typeof(List<object>), "lst"));
-            //    llstCodeLines.Add(CodeLine.Assign("lst", Operation.CreateInstance(typeof(List<object>))));
-            //}
 
 
             foreach (var lobjChildNode in aobjSingleChildNode.Elements())
@@ -202,18 +174,13 @@ namespace ExpressionBuilder.ConsoleTest
                         {
                             string lstrPath = lobjChildNode.Attribute("path").Value;
                             string lstrKey = lobjChildNode.Attribute("name").Value;
-                            alstCodeLines.Add(ProcessAssignElement(lstrKey,lstrPath));
+                            llstCodeLines.Add(Operation.Invoke(Operation.Variable("localvar"),
+                                "SetVal", new OperationConst(lstrKey), Operation.Get(lstrPath)));
                         }
                         break;
                     case "single":
                         {
-                            
-                           // string astrKey = lobjChildNode.Attribute("name").Value;
-                            //llstCodeLines.Add(CodeLine.CreateVariable(typeof(mDictionary), astrKey));
-                            //llstCodeLines.Add(CodeLine.Assign(astrKey,Operation.CreateInstance(typeof(mDictionary))));
-
-                          // ProcessSingleElement(lobjChildNode, aobjDFO, alstCodeLines);
-                          //  AddToDictionary(lobjChildNode.Attribute("name").Value, "lst", "localvar");
+                            llstCodeLines.AddRange(ProcessSingleElement(lobjChildNode, aobjParentContainerKey));
 
                         }
                         break;
@@ -229,23 +196,11 @@ namespace ExpressionBuilder.ConsoleTest
             //}
             //else
             {
-                //ICodeLine lobjCodeLine = Operation.Invoke(Operation.Variable(aobjParentContainerKey),
-                //    "SetVal", new OperationConst(lstrSingleObjectKey), Operation.Variable("localvar"));
-                //llstCodeLines.Add(lobjCodeLine);
+                ICodeLine lobjCodeLine = Operation.Invoke(Operation.Variable(aobjParentContainerKey),
+                    "SetVal", new OperationConst(lstrSingleObjectKey), Operation.Variable("localvar"));
+                llstCodeLines.Add(lobjCodeLine);
             }
-            return alstCodeLines;
-        }
-
-        private static ICodeLine ProcessAssignElement(string astrKey, string astrObjectPath)
-        {
-           return Operation.Invoke(Operation.Variable("localDictionary"),
-                "SetVal", new OperationConst(astrKey), Operation.Get(astrObjectPath));
-        }
-
-        private static List<ICodeLine> ProcessNestedSingleElement(XElement aobjSingleChildNode,
-            List<ICodeLine> alstCodeLines = null)
-        {
-            return null;
+            return llstCodeLines;
         }
 
         private static void CreateInputVariables(DynamicFunctionObject functionExpression, XElement lobjChildNode)
@@ -262,7 +217,7 @@ namespace ExpressionBuilder.ConsoleTest
             functionExpression.FunctionBody.Add(CodeLine.CreateVariable(typeof(mDictionary), "data"));
             functionExpression.FunctionBody.Add(CodeLine.Assign("data",
                 Operation.CreateInstance(typeof(mDictionary))));
-            functionExpression.FunctionBody.Add(CodeLine.CreateVariable(typeof(mDictionary), "localDictionary")); // this is local variable of type dictionary (instance is created in single and list block) where the values in single and loop will be filled in and pushed to the single dictionary
+            functionExpression.FunctionBody.Add(CodeLine.CreateVariable(typeof(mDictionary), "localvar")); // this is local variable of type dictionary (instance is created in single and list block) where the values in single and loop will be filled in and pushed to the single dictionary
 
 
         }
@@ -282,6 +237,12 @@ namespace ExpressionBuilder.ConsoleTest
         }
     }
 
-  
+    class DynamicFunctionObject
+    {
+        //public List<Variable> InputParams { get; set; }
+        public List<Variable> InputParams { get; set; }
+        public List<ICodeLine> FunctionBody { get; set; }
+        public string FunctionReturn { get; set; }
+    }
 }
 

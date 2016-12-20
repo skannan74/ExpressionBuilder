@@ -11,7 +11,7 @@ using ExpressionBuilder.Parser;
 
 namespace ExpressionBuilder
 {
-    public class ForEach : IForEach, ICodeLine
+    public class ForEach : IForEach
     {
         internal List<ICodeLine> CodeLines; // Loop Content
         internal IRightable CollectionSourceVar; // Source collection
@@ -89,7 +89,12 @@ namespace ExpressionBuilder
                 var expLine = line.ToExpression(context);
 
                 var createVariable = line as CreateVariable;
-              
+                if (createVariable != null)
+                {
+                    //listOfThenVars.Add((ParameterExpression)expLine);
+                    expLine = createVariable.DefaultInitialize(context);
+                }
+
                 loopContent.Add(expLine);
             }
             return ForEachExpr(collectionVarExpr, item, loopContent.ToArray(),context);

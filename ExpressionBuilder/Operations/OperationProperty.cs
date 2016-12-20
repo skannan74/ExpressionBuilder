@@ -50,7 +50,7 @@ namespace ExpressionBuilder.Operations
             return context.GetVariable(Name).Expression;
         }
 
-        //private Expression ToExpression(Expression aobjSourceExpression, string astrPropertyName)
+        //private Expression ToExpression1(Expression aobjSourceExpression, string astrPropertyName)
         //{
 
         //    string[] parts = astrPropertyName.Split('.');
@@ -78,9 +78,14 @@ namespace ExpressionBuilder.Operations
 
             if (parts.Length > 1)
                 member = ToExpression(member, parts[1]);
+            if (member.Type.IsGenericType)
+                return Expression.Condition(Expression.Equal(obj, Expression.Constant(null)),
+                 Expression.Default(member.Type), member);
+            else
+                return Expression.Condition(Expression.Equal(obj, Expression.Constant(null)),
+                     Expression.Convert(Expression.Default(member.Type), typeof(object)), Expression.Convert(member, typeof(object)));
 
-            return Expression.Condition(Expression.Equal(obj, Expression.Constant(null)),
-                Expression.Constant(null, member.Type), member);
+
         }
     }
 }

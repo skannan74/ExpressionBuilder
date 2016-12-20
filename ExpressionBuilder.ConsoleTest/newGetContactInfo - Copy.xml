@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xFilter>
+	<xFilterGet>
+	<!-- 
+		Input for filter, it can be of any busObject type
+	-->
+		<input>
+			<variable name="ExpressionBuilder.ConsoleTest.busMSSPerson" alias="person"/>
+		</input>
+	<!-- 
+		Single Returns a dictionary with <String,object> where object is Dictionary<string,object> 
+	-->
+			<single name="ContactInfo">
+			  <assign name="primaryphoneno" path="person.ibusPersonPrimaryPhone.icdoPersonPhone.phone_number" />
+			  <assign name="altphoneno"     path="person.ibusPersonAlternatePhone.icdoPersonPhone.phone_number" />
+			</single>
+			<list name="Addresses" path="person.iclbAddress" loopVariable="item">
+			  <assign name="Address1" path="item.Address1"/>
+			  <assign name="Address2" path="item.Address2"/>
+        <single name="AddressContactPerson">
+          <assign name="ContactPersonFirstName" path="item.ContactPerson.FirstName" />
+          <assign name="ContactPersonLastName" path="item.ContactPerson.LastName" />
+        </single>
+		  </list>
+	</xFilterGet>
+</xFilter>
+
